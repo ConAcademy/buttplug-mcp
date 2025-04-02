@@ -1,0 +1,64 @@
+version: '3'
+
+tasks:
+  default:
+    desc: 'Default task is to "build"'
+    deps:
+      - build
+
+  list:
+    desc: 'Lists available tasks'
+    cmds:
+      - task --list-all
+
+  tidy:
+    desc: 'Tidy all'
+    cmds:
+      - go mod tidy
+    sources:
+      - "*.go"
+      - "cmd/**/*.go"
+      - "internal/**/*.go"
+      - go.mod
+      - go.sum
+
+  build:
+    desc: 'Build the buttplug-mcp service'
+    deps: [tidy]
+    cmds:
+      - go build -o bin/buttplug-mcp cmd/buttplug-mcp/main.go
+    generates:
+      - bin/buttplug-mcp
+    sources:
+      - "*.go"
+      - "cmd/**/*.go"
+      - "internal/**/*.go"
+      - go.mod
+      - go.sum
+
+  clean:
+    desc: 'Clean all build products'
+    cmds:
+      - rm -f bin/buttplug-mcp
+
+  stdio-schema:
+    desc: 'Extracts the schema from the stdio server'
+    deps: [build]
+    cmds:
+      - echo '{"method":"tools/list","params":{},"jsonrpc":"2.0","id":1}' | ./bin/buttplug-mcp 2>/dev/null
+      - echo '{"method":"resources/list","params":{},"jsonrpc":"2.0","id":1}' | ./bin/buttplug-mcp 2>/dev/null
+
+  stdio-devices:
+    desc: 'Lists the connected Buttplug devices via the stdio server'
+    deps: [build]
+    cmds:
+      - (sleep 10 && echo '{"method":"resources/read","params":{"uri":"/devices"},"jsonrpc":"2.0","id":1}') | ./bin/buttplug-mcp 2>/dev/null
+
+  bake-schema:
+    desc: 'Bakes the JSON schema for the server'
+    deps: [build]
+    cmds:
+      - echo '{"method":"tools/list","params":{},"jsonrpc":"2.0","id":1}' | ./bin/buttplug-mcp 2>/dev/null | jq > schema_tools.json
+      - echo '{"method":"resources/list","params":{},"jsonrpc":"2.0","id":1}' | ./bin/buttplug-mcp 2>/dev/null | jq > schema_resources.json
+
+

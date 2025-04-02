@@ -1,0 +1,36 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "tools": [
+      {
+        "description": "Vibrates device by `id`, selecting `strength` and optional `motor`",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Device ID to query, sourced from `/devices`",
+              "pattern": "^[0-9]*$",
+              "type": "number"
+            },
+            "motor": {
+              "description": "Motor number to vibrate, defaults to 0",
+              "pattern": "^[0-9]*$",
+              "type": "number"
+            },
+            "strength": {
+              "description": "Strength from 0.0 to 1.0, with 0.0 being off and 1.0 being full",
+              "pattern": "^(0(\\.\\d+)?|1(\\.0+)?)$",
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "strength"
+          ]
+        },
+        "name": "device_vibrate"
+      }
+    ]
+  }
+}

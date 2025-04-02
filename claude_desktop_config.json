@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+      "buttplug": {
+        "command": "/opt/homebrew/bin/buttplug-mcp",
+        "args": [
+          "--ws-port", "12345"
+        ]
+      }
+    }
+  }
+  

@@ -1,0 +1,72 @@
+# .goreleaser.yml file
+# buttplug-mcp - another ConAcademy joint
+# Copyright (c) 2025 Neomantra BV
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+project_name: buttplug-mcp
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: cmd/buttplug-mcp/main.go
+    id: buttplug-mcp
+    binary: buttplug-mcp
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+universal_binaries:
+  - replace: true
+
+release:
+  github:
+    owner: conacademy
+    name: buttplug-mcp
+
+brews:
+  - homepage: https://github.com/conacademy/buttplug-mcp
+    description: "Buttplug MCP Server"
+    repository:
+      owner: conacademy
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: goreleaserbot
+      email: goreleaserbot@neomantra.net
+    install: |
+      bin.install "buttplug-mcp"

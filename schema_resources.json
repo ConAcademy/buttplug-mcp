@@ -1,0 +1,14 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "resources": [
+      {
+        "uri": "/devices",
+        "name": "Device List",
+        "description": "List of connected Buttplug devices in JSON",
+        "mimeType": "application/json"
+      }
+    ]
+  }
+}

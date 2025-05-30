@@ -41,6 +41,7 @@ func main() {
 	pflag.StringVarP(&config.MCPConfig.SSEHostPort, "sse-host", "", "", "host:port to listen to SSE connections")
 	pflag.BoolVarP(&config.MCPConfig.UseSSE, "sse", "", false, "Use SSE Transport (default is STDIO transport)")
 	pflag.IntVarP(&config.BPConfig.WsPort, "ws-port", "", 0, "port to connect to the Buttplug Websocket server")
+	pflag.DurationVarP(&config.BPConfig.DebounceDuration, "debounce", "d", bp.DefaultDebounceDuration, "duration for debounce (default is 20Hz = '50ms')")
 	pflag.BoolVarP(&config.Verbose, "verbose", "v", false, "Verbose logging")
 	pflag.BoolVarP(&showHelp, "help", "h", false, "Show help")
 	pflag.Parse()

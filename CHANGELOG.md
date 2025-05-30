@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.3 (2025-05-30)
+
+ * Control debouncer period  with `--debounce` (#1)
+
 ## v0.0.2 (2025-05-30)
 
  * Update to latest `go-mcp v0.31`

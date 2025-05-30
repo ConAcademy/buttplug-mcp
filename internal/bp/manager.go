@@ -14,9 +14,16 @@ import (
 	"github.com/diamondburned/go-buttplug/device"
 )
 
+// DefaultDebounceDuration is hte Default used for DebounceDuration.  Default is 50ms, 20Hz.
+const DefaultDebounceDuration = device.DebounceFrequency
+
 // Config conifgures Manager
 type Config struct {
-	WsPort int // websocket port to start from
+	// DebounceDuration determines the period of frequency to debounce certain commands
+	// when sending them to the websocket. It works around the internal event
+	// buffers for real-time control. Default is '50ms', 20Hz.   -1 to disable.
+	DebounceDuration time.Duration // Duration for debounce (default is 50ms)
+	WsPort           int           // websocket port to start from
 }
 
 // Manager keeps track of Buttplug resources
@@ -63,6 +70,7 @@ func (m *Manager) Run() error {
 	broadcaster := buttplug.NewBroadcaster()
 
 	m.manager = device.NewManager()
+	m.manager.DebounceFrequency = m.config.DebounceDuration
 	m.manager.Listen(broadcaster.Listen())
 
 	msgCh := broadcaster.Listen()

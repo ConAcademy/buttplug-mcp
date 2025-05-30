@@ -5,7 +5,6 @@ package mcp
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"net/url"
@@ -217,16 +216,14 @@ func vibrateDeviceHandler(ctx context.Context, request mcp.CallToolRequest) (*mc
 	var deviceID, motorID int
 	var strength float64
 	var err error
-	var ok bool
-	args := request.Params.Arguments
 
-	if deviceID, ok = args["id"].(int); !ok {
-		return nil, errors.New("id must be set")
+	if deviceID, err = request.RequireInt("id"); err != nil {
+		return nil, fmt.Errorf("id must be set %w", err)
 	}
-	if strength, ok = args["strength"].(float64); !ok {
-		return nil, errors.New("strength must be set")
+	if strength, err = request.RequireFloat("strength"); err != nil {
+		return nil, fmt.Errorf("strength must be set %w", err)
 	}
-	if motorID, ok = args["motor"].(int); !ok {
+	if motorID, err = request.RequireInt("motor"); err != nil {
 		motorID = 0 // it's OK, it's optional and we default to 0
 	}
 

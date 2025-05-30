@@ -60,6 +60,7 @@ release:
 brews:
   - homepage: https://github.com/conacademy/buttplug-mcp
     description: "Buttplug MCP Server"
+    directory: Formula
     repository:
       owner: conacademy
       name: homebrew-tap
